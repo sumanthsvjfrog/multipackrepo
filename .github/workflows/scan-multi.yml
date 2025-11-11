@@ -1,0 +1,89 @@
+name: "Frogbot Scan and Fix"
+on:
+  workflow_dispatch:
+    # Creating fix pull requests will be triggered by any push to one of the these branches .
+    # You can add or replace to any branch you want to open fix pull requests for.
+permissions:
+  contents: write
+  pull-requests: write
+  security-events: write
+  id-token: write
+jobs:
+  scan-repository:
+    runs-on: ubuntu-24.04
+    # defaults:
+    #   run:
+    #     working-directory: python-example/pip-example
+    steps:
+      - uses: actions/checkout@v4
+        # with:
+        #   repository: jfrog/project-examples
+        #   sparse-checkout: |
+        #     python-example/pip-example
+      # Install prerequisites
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+   
+      - name: Setup Node
+        uses: actions/setup-node@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'   
+          java-version: '17'       
+          cache: 'maven'
+
+    
+      - name: Scan-
+        uses: jfrog/frogbot@v2
+        with:
+          oidc-provider-name: gitoidc
+          command: scan-repository
+          working-directory: mavenpack
+        #  oidc-audience: frogoidc
+        env:
+          # [Mandatory]
+          # JFrog platform URL
+          JF_URL: https://${{ vars.JF_URL }}/
+
+          # [Mandatory]
+          # The GitHub token automatically generated for the job
+          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JF_WATCHES: "Frog_watch"
+          
+      - name: Scan-NPM
+        uses: jfrog/frogbot@v2
+        with:
+          oidc-provider-name: gitoidc
+          command: scan-repository
+          working-directory: npmpack
+        #  oidc-audience: frogoidc
+        env:
+          # [Mandatory]
+          # JFrog platform URL
+          JF_URL: https://${{ vars.JF_URL }}/
+
+          # [Mandatory]
+          # The GitHub token automatically generated for the job
+          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JF_WATCHES: "Frog_watch"
+          
+      - name: Scan-pypi
+        uses: jfrog/frogbot@v2
+        with:
+          oidc-provider-name: gitoidc
+          command: scan-repository
+          working-directory: pythonpack
+        #  oidc-audience: frogoidc
+        env:
+          # [Mandatory]
+          # JFrog platform URL
+          JF_URL: https://${{ vars.JF_URL }}/
+
+          # [Mandatory]
+          # The GitHub token automatically generated for the job
+          JF_GIT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          JF_WATCHES: "Frog_watch"
