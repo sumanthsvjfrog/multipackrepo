@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.example</groupId>
+    <artifactId>maven-hello-world</artifactId>
+    <version>1.0-RELEASE</version>
+    <packaging>jar</packaging>
+
+    <name>maven-hello-world</name>
+    <description>A simple Hello World Maven project with vulnerabilities</description>
+
+    <distributionManagement>
+        <repository>
+            <id>maven-hosted</id>
+            <url>http://172.18.105.158:8081/repository/maven-hosted/</url>
+        </repository>
+    </distributionManagement>
+
+    <dependencies>
+        <!-- 1. Outdated Dependency (Vulnerable version) -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>4.0.0.RELEASE</version> <!-- Old version with known vulnerabilities -->
+        </dependency>
+    </dependencies>
+</project>
