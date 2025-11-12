@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>4.0.0.RELEASE</version> <!-- Old version with known vulnerabilities -->
+            <version>5.2.19.RELEASE</version> <!-- Old version with known vulnerabilities -->
         </dependency>
     </dependencies>
 </project>
