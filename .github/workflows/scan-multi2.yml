@@ -1,0 +1,79 @@
+name: "Frogbot Scan and Fix multi"
+on:
+  workflow_dispatch:
+    # Creating fix pull requests will be triggered by any push to one of the these branches .
+    # You can add or replace to any branch you want to open fix pull requests for.
+permissions:
+  contents: write
+  pull-requests: write
+  security-events: write
+  id-token: write
+jobs:
+  scan-repository:
+    runs-on: ubuntu-24.04
+    # defaults:
+    #   run:
+    #     working-directory: python-example/pip-example
+    steps:
+      - uses: actions/checkout@v4
+        # with:
+        #   repository: jfrog/project-examples
+        #   sparse-checkout: |
+        #     python-example/pip-example
+      # Install prerequisites
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+   
+      - name: Setup Node
+        uses: actions/setup-node@v3
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'   
+          java-version: '17'       
+          cache: 'maven'
+
+    
+      - name: Run Frogbot scan (Maven)
+        uses: jfrog/frogbot@v2
+        with:
+          oidc-provider-name: gitoidc
+        env:
+          # --- KEY CHANGE: Use JF_SCAN_PATHS to target the single directory ---
+          JF_SCAN_PATHS: mavenpack  # Frogbot will only scan this path
+          
+          # Standard Frogbot Configuration
+          JF_URL: https://${{ vars.JF_URL }}/
+          JF_GIT_TOKEN: ${{ secrets.JF_GITHUB_TOKEN }}
+          JF_WATCHES: "Frog_watch"
+
+      # --- 2. Isolated NPM Scan ---
+      - name: Run Frogbot scan (NPM)
+        uses: jfrog/frogbot@v2
+        with:
+          oidc-provider-name: gitoidc
+        env:
+          # --- KEY CHANGE: Target the npm directory ---
+          JF_SCAN_PATHS: npmpack
+          
+          # Standard Frogbot Configuration
+          JF_URL: https://${{ vars.JF_URL }}/
+          JF_GIT_TOKEN: ${{ secrets.JF_GITHUB_TOKEN }}
+          JF_WATCHES: "Frog_watch"
+
+      # --- 3. Isolated PyPI Scan ---
+      - name: Run Frogbot scan (PyPI)
+        uses: jfrog/frogbot@v2
+        with:
+          oidc-provider-name: gitoidc
+        env:
+          # --- KEY CHANGE: Target the Python directory ---
+          JF_SCAN_PATHS: pythonpack
+          
+          # Standard Frogbot Configuration
+          JF_URL: https://${{ vars.JF_URL }}/
+          JF_GIT_TOKEN: ${{ secrets.JF_GITHUB_TOKEN }}
+          JF_WATCHES: "Frog_watch"
