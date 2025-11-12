@@ -1,4 +1,4 @@
-name: "Frogbot Scan and Fix multi"
+name: "Frogbot Scan and Fix multi2"
 on:
   workflow_dispatch:
     # Creating fix pull requests will be triggered by any push to one of the these branches .
