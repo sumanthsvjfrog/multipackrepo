@@ -10,12 +10,11 @@
 
       # [Mandatory]
       # List of branches to scan
-    #  branches:
-    #    - main
-   # scan:
-   #   includeAllVulnerabilities: true
-   #   failOnSecurityIssues: false
-   #   projects:
-   #     - workingDirs:
-   #         - npmpack
-   #         - mavenpack
+      branches:
+        - main
+    scan:
+      includeAllVulnerabilities: true
+      failOnSecurityIssues: false
+      projects:
+        - workingDirs:
+            - npmpack
